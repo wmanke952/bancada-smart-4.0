@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Unidades SENAI</title>
+</head>
+<body>
+
+  <!-- Cabeçalho / Título da página -->
+  <header>
+    <h1>Gerenciamento de Unidades SENAI</h1>
+    <button type="button" id="btn-nova-unidade">+ Nova Unidade</button>
+  </header>
+
+  <!-- Área destinada a mensagens do sistema -->
+  <section id="area-mensagens">
+    <div>
+      <span>Mensagem do sistema: Esta é uma área para exibições de alertas ou confirmações.</span>
+    </div>
+  </section>
+
+  <!-- Área reservada para o Formulário (Cadastrar / Editar) -->
+  <section id="area-formulario" style="display: none;">
+    <h2>Cadastrar / Editar Unidade</h2>
+    <form id="form-unidade">
+      <p><em>(Campos do formulário serão implementados na próxima etapa)</em></p>
+    </form>
+  </section>
+
+  <!-- Área destinada à listagem das unidades -->
+  <main id="area-listagem">
+    <h2>Lista de Unidades</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cidade</th>
+          <th>Endereço</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dados estáticos demonstrativos -->
+        <tr>
+          <td>SENAI Blumenau</td>
+          <td>Blumenau</td>
+          <td>Rua São Paulo, 1147</td>
+          <td>Ativo</td>
+          <td>
+            <button type="button">Editar</button>
+            <button type="button">Excluir</button>
+          </td>
+        </tr>
+        <tr>
+          <td>SENAI Florianópolis</td>
+          <td>Florianópolis</td>
+          <td>Rod. Admar Gonzaga, 2765</td>
+          <td>Ativo</td>
+          <td>
+            <button type="button">Editar</button>
+            <button type="button">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+</body>
+</html>
