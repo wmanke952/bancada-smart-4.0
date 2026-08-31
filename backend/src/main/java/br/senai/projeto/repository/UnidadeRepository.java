@@ -10,5 +10,8 @@ import br.senai.projeto.entity.Unidade;
 
 @Repository
 public interface UnidadeRepository extends JpaRepository<Unidade, Integer> {
+    
+    Optional<Unidade> findById(Integer id);
 
+    List<Unidade> findAll();
 }

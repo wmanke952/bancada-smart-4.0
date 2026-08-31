@@ -1,6 +1,7 @@
 package br.senai.projeto.dto;
 
 import lombok.Data;
+import br.senai.projeto.entity.StatusUnidade;
 
 /**
  * DTO responsável por retornar os dados de uma unidade cadastrada.
