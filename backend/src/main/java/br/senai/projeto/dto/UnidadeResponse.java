@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class UnidadeResponse {
 
-    private Long id;
+    private Integer id;
     private String nome;
     private String cidade;
     private String endereco;
