@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Unidades SENAI</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #333; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    button { cursor: pointer; padding: 8px 16px; background-color: #0056b3; color: white; border: none; border-radius: 4px; }
+    button:hover { background-color: #003d80; }
+    .alert { padding: 10px; background-color: #e2e3e5; border: 1px solid #d6d8db; border-radius: 4px; margin-bottom: 20px; }
+    .form-container { background-color: #f8f9fa; padding: 15px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .actions button { margin-right: 5px; background-color: #6c757d; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gerenciamento de Unidades SENAI</h1>
+    <button type="button" id="btn-nova-unidade">+ Nova Unidade</button>
+  </header>
+
+  <!-- Área destinada a mensagens do sistema -->
+  <section id="area-mensagens">
+    <div class="alert">
+      <span>Mensagem do sistema: Esta é uma área para exibições de alertas ou confirmações.</span>
+    </div>
+  </section>
+
+  <section id="area-formulario" class="form-container" style="display: none;">
+    <h2>Cadastrar / Editar Unidade</h2>
+    <form id="form-unidade">
+      <p><em>(Campos do formulário serão implementados na próxima etapa)</em></p>
+    </form>
+  </section>
+
+  <main id="area-listagem">
+    <h2>Lista de Unidades</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cidade</th>
+          <th>Endereço</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td>SENAI Blumenau</td>
+          <td>Blumenau</td>
+          <td>Rua São Paulo, 1147</td>
+          <td>Ativo</td>
+          <td class="actions">
+            <button type="button">Editar</button>
+            <button type="button">Excluir</button>
+          </td>
+        </tr>
+        <tr>
+          <td>SENAI Florianópolis</td>
+          <td>Florianópolis</td>
+          <td>Rod. Admar Gonzaga, 2765</td>
+          <td>Ativo</td>
+          <td class="actions">
+            <button type="button">Editar</button>
+            <button type="button">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+</body>
+</html>
