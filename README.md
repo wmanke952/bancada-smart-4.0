@@ -32,7 +32,7 @@ A pasta `docs/` será utilizada para armazenar os documentos produzidos durante 
 
 * [x] Fase 1 — Levantamento de requisitos
 * [x] Fase 2 — Modelagem da solução
-* [ ] Fase 3 — Preparação para o desenvolvimento
+* [x] Fase 3 — Preparação para o desenvolvimento
 * [ ] Fase 4 — Desenvolvimento
 * [ ] Fase 5 — Integração
 * [ ] Fase 6 — Testes
