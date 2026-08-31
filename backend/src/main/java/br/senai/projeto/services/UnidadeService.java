@@ -22,7 +22,6 @@ public class UnidadeService {
     public UnidadeResponse cadastrar(UnidadeRequest request) {
         Unidade unidade = new Unidade();
 
-        // Passa os dados recebidos para a entidade
         unidade.setNome(request.getNome());
         unidade.setCidade(request.getCidade());
         unidade.setEndereco(request.getEndereco());
@@ -30,14 +29,13 @@ public class UnidadeService {
         // Toda unidade nova começa ativa
         unidade.setStatus(StatusUnidade.ATIVA);
 
-        // O banco gera o ID ao salvar a unidade
+        // O ID é gerado automaticamente ao salvar
         Unidade unidadeSalva = unidadeRepository.save(unidade);
 
         return converterParaResponse(unidadeSalva);
     }
 
     public List<UnidadeResponse> listar() {
-        // Converte as unidades encontradas para DTOs de resposta
         return unidadeRepository.findAll()
                 .stream()
                 .map(this::converterParaResponse)
@@ -56,7 +54,7 @@ public class UnidadeService {
     ) {
         Unidade unidade = buscarEntidadePorId(id);
 
-        // Somente estes dados podem ser alterados
+        // Somente estes campos podem ser atualizados
         unidade.setNome(request.getNome());
         unidade.setCidade(request.getCidade());
         unidade.setEndereco(request.getEndereco());
@@ -69,13 +67,12 @@ public class UnidadeService {
     public void desativar(Integer id) {
         Unidade unidade = buscarEntidadePorId(id);
 
-        // A unidade continua no banco, apenas muda de status
+        // Não exclui o registro, apenas altera o status
         unidade.setStatus(StatusUnidade.INATIVA);
         unidadeRepository.save(unidade);
     }
 
     private Unidade buscarEntidadePorId(Integer id) {
-        // Evita repetir a busca nos outros métodos
         return unidadeRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException(
@@ -87,21 +84,11 @@ public class UnidadeService {
     private UnidadeResponse converterParaResponse(Unidade unidade) {
         UnidadeResponse response = new UnidadeResponse();
 
-        response.setId(unidade.getId().longValue());
+        response.setId(unidade.getId());
         response.setNome(unidade.getNome());
         response.setCidade(unidade.getCidade());
         response.setEndereco(unidade.getEndereco());
-
-        // Converte o status da entidade para o enum usado pelo DTO
-        if (unidade.getStatus() == StatusUnidade.ATIVA) {
-            response.setStatus(
-                    br.senai.projeto.dto.StatusUnidade.ATIVO
-            );
-        } else {
-            response.setStatus(
-                    br.senai.projeto.dto.StatusUnidade.INATIVO
-            );
-        }
+        response.setStatus(unidade.getStatus());
 
         return response;
     }
