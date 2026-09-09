@@ -1,4 +1,3 @@
-package br.senai.projeto.controller;
 
 import br.senai.projeto.dto.UnidadeRequest;
 import br.senai.projeto.dto.UnidadeResponse;
