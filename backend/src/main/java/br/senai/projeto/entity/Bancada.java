@@ -6,21 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import br.senai.projeto.entity.StatusConexaoBancada;
-import br.senai.projeto.entity.StatusUsoBancada;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bancada")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor 
+@AllArgsConstructor
 @Builder
 public class Bancada {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bancada")
-    private int idBancada;
+    private Long idBancada;
 
     @Column(name = "modelo", nullable = false)
     private String modelo;
@@ -34,10 +33,27 @@ public class Bancada {
     private StatusUsoBancada statusUso;
 
     @Column(name = "tempo_base_min")
-    private int tempoBaseMin;
+    private Integer tempoBaseMin;
 
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
     private Unidade unidade;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }
