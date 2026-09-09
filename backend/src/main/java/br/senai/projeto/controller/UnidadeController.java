@@ -3,12 +3,15 @@ package br.senai.projeto.controller;
 import br.senai.projeto.dto.UnidadeRequest;
 import br.senai.projeto.dto.UnidadeResponse;
 import br.senai.projeto.services.UnidadeService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/unidades")
+@CrossOrigin
 public class UnidadeController {
 
     private final UnidadeService unidadeService;
@@ -17,38 +20,34 @@ public class UnidadeController {
         this.unidadeService = unidadeService;
     }
 
-    // GET /unidades
     @GetMapping
-    public List<UnidadeResponse> listarUnidades() {
+    public List<UnidadeResponse> listar() {
         return unidadeService.listar();
     }
 
-    // GET /unidades/{id}
     @GetMapping("/{id}")
-    public UnidadeResponse buscarUnidade(@PathVariable Integer id) {
+    public UnidadeResponse buscarPorId(@PathVariable Integer id) {
         return unidadeService.buscarPorId(id);
     }
 
-    // POST /unidades
     @PostMapping
-    public UnidadeResponse criarUnidade(
-            @RequestBody UnidadeRequest request) {
-
+    @ResponseStatus(HttpStatus.CREATED)
+    public UnidadeResponse cadastrar(
+            @Valid @RequestBody UnidadeRequest request
+    ) {
         return unidadeService.cadastrar(request);
     }
 
-    // PUT /unidades/{id}
     @PutMapping("/{id}")
-    public UnidadeResponse atualizarUnidade(
+    public UnidadeResponse atualizar(
             @PathVariable Integer id,
-            @RequestBody UnidadeRequest request) {
-
+            @Valid @RequestBody UnidadeRequest request
+    ) {
         return unidadeService.atualizar(id, request);
     }
 
-    // DELETE /unidades/{id}
-    @DeleteMapping("/{id}")
-    public void excluirUnidade(@PathVariable Integer id) {
+    @PatchMapping("/{id}/desativar")
+    public void desativar(@PathVariable Integer id) {
         unidadeService.desativar(id);
     }
 }

@@ -217,6 +217,11 @@
   }
 </style>
 </head>
+
+<script>
+  // Código da integração com a API ficará aqui
+</script>
+
 <body>
 
 <div class="app">
@@ -278,22 +283,79 @@
         <button class="btn-new" id="btnNova">+ Nova unidade</button>
       </div>
 
-      <div class="table-panel">
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Cidade</th>
-              <th>Endereço</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="unidadesBody"></tbody>
-        </table>
-        <div class="empty-state" id="emptyState" style="display:none;">Nenhuma unidade cadastrada.</div>
-      </div>
-    </div>
+  <!-- Área destinada a mensagens do sistema -->
+  <section id="area-mensagens" aria-live="polite"></section>
+
+
+  <!-- Área reservada para o Formulário (Cadastrar / Editar) -->
+  <section id="area-formulario" style="display: none;">
+    <h2>Cadastrar / Editar Unidade</h2>
+    <form id="form-unidade">
+
+  <input type="hidden" id="unidade-id">
+
+  <div>
+    <label for="nome">Nome:</label>
+    <input
+      type="text"
+      id="nome"
+      name="nome"
+      required
+    >
+  </div>
+
+  <div>
+    <label for="cidade">Cidade:</label>
+    <input
+      type="text"
+      id="cidade"
+      name="cidade"
+      required
+    >
+  </div>
+
+  <div>
+    <label for="endereco">Endereço:</label>
+    <input
+      type="text"
+      id="endereco"
+      name="endereco"
+      required
+    >
+  </div>
+
+  <button type="submit" id="btn-salvar">
+    Salvar
+  </button>
+
+  <button type="button" id="btn-cancelar">
+    Cancelar
+  </button>
+
+</form>
+
+  </section>
+
+  <!-- Área destinada à listagem das unidades -->
+  <main id="area-listagem">
+    <h2>Lista de Unidades</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cidade</th>
+          <th>Endereço</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+     <tbody id="lista-unidades">
+  <tr>
+    <td colspan="5">Carregando unidades...</td>
+  </tr>
+</tbody>
+
+    </table>
   </main>
 </div>
 
