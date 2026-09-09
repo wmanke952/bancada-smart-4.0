@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Usuários - SENAI</title>
+
+    <link rel="stylesheet" href="usuarios.css">
+</head>
+
+<body>
+
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+
+        <div class="logo-container">
+            <span class="logo-icon">☰</span>
+            <div class="logo-text">
+                <div class="logo">SENAI</div>
+                <span class="logo-tagline">PELO FUTURO DO TRABALHO</span>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="#" class="menu-item">
+                <span class="icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="#" class="menu-item active">
+                <span class="icon">◔</span>
+                Usuários
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">⌂</span>
+                Unidades
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">▤</span>
+                Bancadas
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">▱</span>
+                Pedidos
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">▥</span>
+                Relatórios
+            </a>
+
+        </nav>
+
+        <button class="logout">
+            Sair
+        </button>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <!-- CABEÇALHO -->
+        <div class="breadcrumb">
+            <span class="dot"></span>
+             Gerenciamento de Usuários
+        </div>
+
+        <header class="page-header">
+
+            <div>
+                <h1>Usuários</h1>
+                <p>Gestão de acessos e perfis do sistema</p>
+            </div>
+
+            <button class="btn-primario">+ Novo usuário</button>
+
+        </header>
+
+
+        <!-- TABELA -->
+        <section class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Perfil</th>
+                        <th>Unidade</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td class="nome-usuario">Operador 1</td>
+                        <td>Operador</td>
+                        <td>Blumenau</td>
+                        <td>
+                            <span class="status active-status">Ativo</span>
+                        </td>
+                        <td>
+                            <button class="btn-acao btn-editar">Editar</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="nome-usuario">Admin</td>
+                        <td>Administrador</td>
+                        <td>Todas</td>
+                        <td>
+                            <span class="status inactive-status">Inativo</span>
+                        </td>
+                        <td>
+                            <button class="btn-acao btn-editar">Editar</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="nome-usuario">Operador 2</td>
+                        <td>Operador</td>
+                        <td>Joinville</td>
+                        <td>
+                            <span class="status inactive-status">Inativo</span>
+                        </td>
+                        <td>
+                            <button class="btn-acao btn-editar">Editar</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="nome-usuario">Operador 3</td>
+                        <td>Operador</td>
+                        <td>Florianópolis</td>
+                        <td>
+                            <span class="status active-status">Ativo</span>
+                        </td>
+                        <td>
+                            <button class="btn-acao btn-editar">Editar</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
