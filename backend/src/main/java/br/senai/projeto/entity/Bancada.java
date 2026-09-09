@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import br.senai.projeto.entity.StatusConexaoBancada;
+import br.senai.projeto.entity.StatusUsoBancada;
+
 import java.time.LocalDateTime;
 
 @Entity
