@@ -20,7 +20,7 @@ public class Bancada {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bancada")
-    private Long idBancada;
+    private int idBancada;
 
     @Column(name = "modelo", nullable = false)
     private String modelo;
@@ -34,7 +34,7 @@ public class Bancada {
     private StatusUsoBancada statusUso;
 
     @Column(name = "tempo_base_min")
-    private Integer tempoBaseMin;
+    private int tempoBaseMin;
 
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
