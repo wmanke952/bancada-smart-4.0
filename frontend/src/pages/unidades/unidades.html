@@ -1,31 +1,339 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciamento de Unidades SENAI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidades SENAI - Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue: #0067ff;
+    --blue-2: #3ea8ff;
+    --blue-deep: #0a4fb5;
+    --orange: #ff6a00;
+    --orange-2: #ffb300;
+    --ink: #12151c;
+    --muted: #5c6472;
+    --paper: #f4f6fb;
+    --card: #ffffff;
+    --line: #e4e8f2;
+    --green: #22c55e;
+    --green-ink: #0d5c30;
+    --red: #ef5350;
+    --red-ink: #7a1414;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; }
+  h1,h2,h3{ font-family:'Poppins', 'Inter', sans-serif; }
+
+  .app{ display:flex; min-height:100vh; }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width: 280px;
+    flex-shrink:0;
+    background: linear-gradient(165deg, var(--blue) 0%, var(--blue-2) 100%);
+    display:flex;
+    flex-direction:column;
+    padding: 28px 0 24px;
+  }
+  .brand{
+    background:#fff;
+    margin: 0 24px 34px;
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 20px rgba(10,40,90,0.15);
+  }
+  .brand-row{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{ display:flex; flex-direction:column; gap:2px; }
+  .brand-mark span{ display:block; height:3px; border-radius:2px; background: var(--blue); }
+  .brand-mark span:nth-child(1){ width:12px; }
+  .brand-mark span:nth-child(2){ width:18px; background: var(--orange); }
+  .brand-mark span:nth-child(3){ width:15px; }
+  .brand-logo{ font-family:'Poppins',sans-serif; font-size: 22px; font-weight:800; color: var(--blue); letter-spacing: 0.3px; }
+  .brand-logo span{ color: var(--orange); }
+  .brand-tag{ font-size: 9px; font-weight:700; letter-spacing: 1px; color: var(--blue-deep); margin-top:4px; text-transform:uppercase; }
+
+  nav.nav-list{ display:flex; flex-direction:column; gap: 4px; padding: 0 18px; }
+  .nav-item{
+    display:flex; align-items:center; gap:12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 15.5px;
+    font-weight:500;
+    color: rgba(255,255,255,0.72);
+    cursor:pointer;
+    border-left: 3px solid transparent;
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-item svg{ width:18px; height:18px; flex-shrink:0; opacity:0.85; }
+  .nav-item:hover{ color:#fff; background: rgba(255,255,255,0.09); }
+  .nav-item.active{ color:#fff; background: rgba(255,255,255,0.18); border-left-color: var(--orange); font-weight:700; }
+
+  .sidebar-foot{ margin-top:auto; padding: 0 18px; }
+  .logout-link{
+    display:block; text-align:center; padding: 10px 14px;
+    border-radius: 10px; color: rgba(255,255,255,0.8); font-size: 13.5px;
+    border: 1px solid rgba(255,255,255,0.32);
+  }
+  .logout-link:hover{ background: rgba(255,255,255,0.12); color:#fff; }
+
+  /* ---------- MAIN ---------- */
+  .main{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    padding: 44px 56px 60px;
+    background:
+      repeating-linear-gradient(115deg, transparent 0 140px, rgba(0,103,255,0.035) 140px 141px),
+      var(--paper);
+  }
+  .deco-orange{
+    position:absolute; top:-70px; right:-50px;
+    width: 270px; height:200px;
+    background: linear-gradient(135deg, var(--orange), #d95400);
+    border-radius: 38px;
+    transform: rotate(28deg);
+    box-shadow: 0 20px 45px rgba(217,84,0,0.28);
+    z-index:0; pointer-events:none;
+  }
+  .deco-dots{ position:absolute; display:grid; grid-template-columns: repeat(6,8px); gap:10px; z-index:0; pointer-events:none; }
+  .deco-dots span{ width:5px; height:5px; border-radius:50%; background: var(--orange); opacity:.55; }
+  .deco-dots.br{ right:40px; bottom:32px; }
+
+  .page{ position:relative; z-index:1; animation: fadeIn .25s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(6px);} to{ opacity:1; transform:none; } }
+
+  .page-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom: 30px; flex-wrap:wrap; }
+  .page-head h1{ font-size: 32px; margin: 0 0 4px; font-weight:800; color: var(--ink); }
+  .page-head p{ margin:0; color: var(--muted); font-size:15px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:700; letter-spacing:0.6px; color: var(--blue-deep);
+    background: #e8f1ff; padding:6px 12px; border-radius:999px; margin-bottom:10px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--blue); }
+
+  .btn-new{
+    background: linear-gradient(135deg, var(--blue), var(--blue-2));
+    color:#fff; border:none; border-radius: 12px;
+    padding: 13px 22px; font-weight:700; font-size:15px;
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+    box-shadow: 0 10px 22px rgba(0,103,255,0.25);
+  }
+  .btn-new:hover{ filter:brightness(1.06); }
+
+  /* ---------- TABLE PANEL ---------- */
+  .table-panel{
+    background: var(--card);
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: 0 14px 34px rgba(20,30,60,0.07);
+    border: 1px solid var(--line);
+    overflow:hidden;
+  }
+  table{ width:100%; border-collapse:collapse; }
+  thead th{
+    text-align:left;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+    color: var(--muted);
+    padding: 18px 22px;
+    background: #f7f9fd;
+  }
+  thead th:first-child{ border-radius: 12px 0 0 0; }
+  thead th:last-child{ border-radius: 0 12px 0 0; text-align:right; }
+  tbody tr{ border-bottom: 1px solid var(--line); transition: background .12s ease; }
+  tbody tr:last-child{ border-bottom:none; }
+  tbody tr:hover{ background: #f8fbff; }
+  tbody td{ padding: 18px 22px; font-size:15px; vertical-align:middle; }
+  tbody td.nome{ font-weight:700; }
+  tbody td.endereco{ color: var(--muted); }
+  td.acoes{ text-align:right; white-space:nowrap; }
+
+  .status-pill{
+    display:inline-flex; align-items:center; gap:6px;
+    padding: 6px 14px; border-radius:999px; font-size:12.5px; font-weight:800; letter-spacing:0.3px;
+  }
+  .status-pill .dot{ width:7px; height:7px; border-radius:50%; }
+  .status-pill.ativa{ background:#e3f9ec; color: var(--green-ink); }
+  .status-pill.ativa .dot{ background: var(--green); }
+  .status-pill.inativa{ background:#fdeaea; color: var(--red-ink); }
+  .status-pill.inativa .dot{ background: var(--red); }
+
+  .btn-action{
+    border:none; border-radius: 9px; padding: 9px 16px;
+    font-weight:700; font-size:13.5px; cursor:pointer; margin-left:8px;
+  }
+  .btn-edit{ background:#e8f1ff; color: var(--blue-deep); }
+  .btn-edit:hover{ background:#d9e9ff; }
+  .btn-deactivate{ background:#fdeaea; color: var(--red-ink); }
+  .btn-deactivate:hover{ background:#fbdada; }
+  .btn-activate{ background:#e3f9ec; color: var(--green-ink); }
+  .btn-activate:hover{ background:#d3f3e1; }
+  .btn-save{ background: var(--blue); color:#fff; }
+  .btn-save:hover{ background: var(--blue-deep); }
+  .btn-cancel{ background:#eef0f5; color: var(--muted); }
+  .btn-cancel:hover{ background:#e2e5ec; }
+
+  .edit-input{
+    width:100%; border:1px solid var(--line); border-radius:8px;
+    padding: 8px 10px; font-size:14px; font-family:inherit; color: var(--ink);
+    background:#fbfcff;
+  }
+  .edit-input:focus{ outline:none; border-color: var(--blue); }
+
+  .empty-state{ padding: 60px 20px; text-align:center; color: var(--muted); }
+
+  /* ---------- TOAST ---------- */
+  .toast{
+    position:fixed; top:24px; left:50%;
+    transform: translateX(-50%) translateY(-140%);
+    background: var(--ink); color:#fff;
+    padding: 14px 24px; border-radius: 10px; font-size:14px; z-index:50;
+    transition: transform .35s ease; box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  }
+  .toast.show{ transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 900px){
+    .app{ flex-direction:column; }
+    .sidebar{ width:100%; flex-direction:row; overflow-x:auto; padding:16px; align-items:center; }
+    .brand{ margin:0 12px 0 0; }
+    nav.nav-list{ flex-direction:row; padding:0; }
+    .sidebar-foot{ display:none; }
+    .main{ padding: 28px 18px 40px; }
+    table{ font-size:13px; }
+    thead th, tbody td{ padding: 12px 10px; }
+  }
+</style>
 </head>
+
+<script>
+  // Código da integração com a API ficará aqui
+</script>
+
 <body>
 
-  <!-- Cabeçalho / Título da página -->
-  <header>
-    <h1>Gerenciamento de Unidades SENAI</h1>
-    <button type="button" id="btn-nova-unidade">+ Nova Unidade</button>
-  </header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div class="brand-logo">SENA<span>I</span></div>
+      </div>
+      <div class="brand-tag">Pelo futuro do trabalho</div>
+    </div>
+
+    <nav class="nav-list">
+      <a class="nav-item" href="admin.html#dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="admin.html#usuarios">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20c0-4.1 3.4-6.6 7.5-6.6s7.5 2.5 7.5 6.6"/></svg>
+        Usuários
+      </a>
+      <a class="nav-item active" href="unidades.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21V6l8-3 8 3v15"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/></svg>
+        Unidades
+      </a>
+      <a class="nav-item" href="admin.html#bancadas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg>
+        Bancadas
+      </a>
+      <a class="nav-item" href="admin.html#pedidos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v3h6V3M8 11h8M8 15h5"/></svg>
+        Pedidos
+      </a>
+      <a class="nav-item" href="admin.html#relatorios">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M11 20V4M18 20v-7"/></svg>
+        Relatórios
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a class="logout-link" href="login-senai.html">Sair</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="deco-orange"></div>
+    <div class="deco-dots br">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> RF03 · Gerenciamento de Unidades</div>
+          <h1>Unidades</h1>
+          <p>Unidades SENAI cadastradas no sistema</p>
+        </div>
+        <button class="btn-new" id="btnNova">+ Nova unidade</button>
+      </div>
 
   <!-- Área destinada a mensagens do sistema -->
-  <section id="area-mensagens">
-    <div>
-      <span>Mensagem do sistema: Esta é uma área para exibições de alertas ou confirmações.</span>
-    </div>
-  </section>
+  <section id="area-mensagens" aria-live="polite"></section>
+
 
   <!-- Área reservada para o Formulário (Cadastrar / Editar) -->
   <section id="area-formulario" style="display: none;">
     <h2>Cadastrar / Editar Unidade</h2>
     <form id="form-unidade">
-      <p><em>(Campos do formulário serão implementados na próxima etapa)</em></p>
-    </form>
+
+  <input type="hidden" id="unidade-id">
+
+  <div>
+    <label for="nome">Nome:</label>
+    <input
+      type="text"
+      id="nome"
+      name="nome"
+      required
+    >
+  </div>
+
+  <div>
+    <label for="cidade">Cidade:</label>
+    <input
+      type="text"
+      id="cidade"
+      name="cidade"
+      required
+    >
+  </div>
+
+  <div>
+    <label for="endereco">Endereço:</label>
+    <input
+      type="text"
+      id="endereco"
+      name="endereco"
+      required
+    >
+  </div>
+
+  <button type="submit" id="btn-salvar">
+    Salvar
+  </button>
+
+  <button type="button" id="btn-cancelar">
+    Cancelar
+  </button>
+
+</form>
+
   </section>
 
   <!-- Área destinada à listagem das unidades -->
@@ -41,31 +349,185 @@
           <th>Ações</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Dados estáticos demonstrativos -->
-        <tr>
-          <td>SENAI Blumenau</td>
-          <td>Blumenau</td>
-          <td>Rua São Paulo, 1147</td>
-          <td>Ativo</td>
-          <td>
-            <button type="button">Editar</button>
-            <button type="button">Excluir</button>
-          </td>
-        </tr>
-        <tr>
-          <td>SENAI Florianópolis</td>
-          <td>Florianópolis</td>
-          <td>Rod. Admar Gonzaga, 2765</td>
-          <td>Ativo</td>
-          <td>
-            <button type="button">Editar</button>
-            <button type="button">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
+     <tbody id="lista-unidades">
+  <tr>
+    <td colspan="5">Carregando unidades...</td>
+  </tr>
+</tbody>
+
     </table>
   </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   RF03 — Gerenciamento de Unidades
+   Dados simulados (sem chamadas a API nesta etapa)
+   ===================================================================== */
+const unidades = [
+  { id: 1, nome: "SENAI Blumenau",      cidade: "Blumenau",      endereco: "Rua Exemplo, 123",  status: "ATIVA"   },
+  { id: 2, nome: "SENAI Joinville",     cidade: "Joinville",     endereco: "Rua Exemplo, 456",  status: "ATIVA"   },
+  { id: 3, nome: "SENAI Florianópolis", cidade: "Florianópolis", endereco: "Rua Exemplo, 789",  status: "INATIVA" }
+];
+
+let nextId = unidades.length + 1;
+let editingId = null;   // id da linha em modo de edição (ou "new" para cadastro)
+
+/* --------------------------- Utilitários --------------------------- */
+function getUnidade(id){
+  return unidades.find(u => u.id === id);
+}
+
+function showToast(text){
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+/* ----------------------------- Render ------------------------------ */
+function renderStatusPill(status){
+  const cls = status === 'ATIVA' ? 'ativa' : 'inativa';
+  return `<span class="status-pill ${cls}"><span class="dot"></span>${status}</span>`;
+}
+
+function renderRowView(u){
+  return `
+    <tr data-id="${u.id}">
+      <td class="nome">${u.nome}</td>
+      <td>${u.cidade}</td>
+      <td class="endereco">${u.endereco}</td>
+      <td>${renderStatusPill(u.status)}</td>
+      <td class="acoes">
+        <button class="btn-action btn-edit" data-edit="${u.id}">Editar</button>
+        ${u.status === 'ATIVA'
+          ? `<button class="btn-action btn-deactivate" data-toggle="${u.id}">Desativar</button>`
+          : `<button class="btn-action btn-activate" data-toggle="${u.id}">Ativar</button>`}
+      </td>
+    </tr>
+  `;
+}
+
+function renderRowEdit(u){
+  return `
+    <tr data-id="${u.id}">
+      <td><input class="edit-input" data-field="nome" value="${u.nome}"></td>
+      <td><input class="edit-input" data-field="cidade" value="${u.cidade}"></td>
+      <td><input class="edit-input" data-field="endereco" value="${u.endereco}"></td>
+      <td>${renderStatusPill(u.status)}</td>
+      <td class="acoes">
+        <button class="btn-action btn-save" data-save="${u.id}">Salvar</button>
+        <button class="btn-action btn-cancel" data-cancel="${u.id}">Cancelar</button>
+      </td>
+    </tr>
+  `;
+}
+
+function renderNewRow(){
+  return `
+    <tr data-id="new">
+      <td><input class="edit-input" data-field="nome" placeholder="Nome da unidade"></td>
+      <td><input class="edit-input" data-field="cidade" placeholder="Cidade"></td>
+      <td><input class="edit-input" data-field="endereco" placeholder="Endereço"></td>
+      <td>${renderStatusPill('ATIVA')}</td>
+      <td class="acoes">
+        <button class="btn-action btn-save" data-save="new">Salvar</button>
+        <button class="btn-action btn-cancel" data-cancel="new">Cancelar</button>
+      </td>
+    </tr>
+  `;
+}
+
+function renderUnidadesTable(){
+  const body = document.getElementById('unidadesBody');
+  const emptyState = document.getElementById('emptyState');
+
+  let rowsHtml = '';
+
+  if(editingId === 'new'){
+    rowsHtml += renderNewRow();
+  }
+
+  unidades.forEach(u => {
+    rowsHtml += (editingId === u.id) ? renderRowEdit(u) : renderRowView(u);
+  });
+
+  body.innerHTML = rowsHtml;
+  emptyState.style.display = (unidades.length === 0 && editingId !== 'new') ? 'block' : 'none';
+}
+
+/* ---------------------------- Ações --------------------------------- */
+function startEdit(id){
+  editingId = id;
+  renderUnidadesTable();
+}
+
+function cancelEdit(){
+  editingId = null;
+  renderUnidadesTable();
+}
+
+function saveEdit(id){
+  const row = document.querySelector(`tr[data-id="${id === 'new' ? 'new' : id}"]`);
+  const nome = row.querySelector('[data-field="nome"]').value.trim();
+  const cidade = row.querySelector('[data-field="cidade"]').value.trim();
+  const endereco = row.querySelector('[data-field="endereco"]').value.trim();
+
+  if(!nome || !cidade || !endereco){
+    showToast('Preencha nome, cidade e endereço.');
+    return;
+  }
+
+  if(id === 'new'){
+    unidades.push({ id: nextId++, nome, cidade, endereco, status: 'ATIVA' });
+    showToast(`Unidade "${nome}" cadastrada.`);
+  } else {
+    const u = getUnidade(id);
+    u.nome = nome; u.cidade = cidade; u.endereco = endereco;
+    showToast(`Unidade "${nome}" atualizada.`);
+  }
+
+  editingId = null;
+  renderUnidadesTable();
+}
+
+function toggleStatus(id){
+  const u = getUnidade(id);
+  u.status = (u.status === 'ATIVA') ? 'INATIVA' : 'ATIVA';
+  showToast(`${u.nome} agora está ${u.status}.`);
+  renderUnidadesTable();
+}
+
+/* --------------------------- Eventos (delegação) --------------------------- */
+document.getElementById('btnNova').addEventListener('click', () => {
+  editingId = 'new';
+  renderUnidadesTable();
+});
+
+document.getElementById('unidadesBody').addEventListener('click', (e) => {
+  const editBtn = e.target.closest('[data-edit]');
+  if(editBtn){ startEdit(Number(editBtn.dataset.edit)); return; }
+
+  const toggleBtn = e.target.closest('[data-toggle]');
+  if(toggleBtn){ toggleStatus(Number(toggleBtn.dataset.toggle)); return; }
+
+  const saveBtn = e.target.closest('[data-save]');
+  if(saveBtn){
+    const val = saveBtn.dataset.save;
+    saveEdit(val === 'new' ? 'new' : Number(val));
+    return;
+  }
+
+  const cancelBtn = e.target.closest('[data-cancel]');
+  if(cancelBtn){ cancelEdit(); return; }
+});
+
+/* ------------------------------ Início ------------------------------ */
+renderUnidadesTable();
+</script>
 
 </body>
 </html>
