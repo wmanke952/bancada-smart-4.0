@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhar Pedido - Cliente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue: #0067ff;
+    --blue-2: #3ea8ff;
+    --blue-deep: #0a4fb5;
+    --orange: #ff6a00;
+    --orange-2: #ffb300;
+    --ink: #12151c;
+    --muted: #5c6472;
+    --paper: #f4f6fb;
+    --card: #ffffff;
+    --line: #e4e8f2;
+    --green: #22c55e;
+    --green-ink: #0d5c30;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; }
+  body{
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; }
+  h1,h2,h3{ font-family:'Poppins', 'Inter', sans-serif; }
+
+  .app{ display:flex; min-height:100vh; }
+
+  /* ---------- SIDEBAR (menu lateral do cliente) ---------- */
+  .sidebar{
+    width: 280px;
+    flex-shrink:0;
+    background: linear-gradient(165deg, var(--blue) 0%, var(--blue-2) 100%);
+    display:flex;
+    flex-direction:column;
+    padding: 28px 0 24px;
+  }
+  .brand{
+    background:#fff;
+    margin: 0 24px 34px;
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 20px rgba(10,40,90,0.15);
+  }
+  .brand-row{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{ display:flex; flex-direction:column; gap:2px; }
+  .brand-mark span{ display:block; height:3px; border-radius:2px; background: var(--blue); }
+  .brand-mark span:nth-child(1){ width:12px; }
+  .brand-mark span:nth-child(2){ width:18px; background: var(--orange); }
+  .brand-mark span:nth-child(3){ width:15px; }
+  .brand-logo{ font-family:'Poppins',sans-serif; font-size: 22px; font-weight:800; color: var(--blue); letter-spacing: 0.3px; }
+  .brand-logo span{ color: var(--orange); }
+  .brand-tag{ font-size: 9px; font-weight:700; letter-spacing: 1px; color: var(--blue-deep); margin-top:4px; text-transform:uppercase; }
+
+  nav.nav-list{ display:flex; flex-direction:column; gap: 4px; padding: 0 18px; }
+  .nav-item{
+    display:flex; align-items:center; gap:12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 15.5px;
+    font-weight:500;
+    color: rgba(255,255,255,0.72);
+    cursor:pointer;
+    border-left: 3px solid transparent;
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-item svg{ width:18px; height:18px; flex-shrink:0; opacity:0.85; }
+  .nav-item:hover{ color:#fff; background: rgba(255,255,255,0.09); }
+  .nav-item.active{ color:#fff; background: rgba(255,255,255,0.18); border-left-color: var(--orange); font-weight:700; }
+
+  .sidebar-foot{ margin-top:auto; padding: 0 18px; }
+  .logout-link{
+    display:block; text-align:center; padding: 10px 14px;
+    border-radius: 10px; color: rgba(255,255,255,0.8); font-size: 13.5px;
+    border: 1px solid rgba(255,255,255,0.32);
+  }
+  .logout-link:hover{ background: rgba(255,255,255,0.12); color:#fff; }
+
+  /* ---------- MAIN ---------- */
+  .main{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    padding: 44px 56px 60px;
+    background:
+      repeating-linear-gradient(115deg, transparent 0 140px, rgba(0,103,255,0.035) 140px 141px),
+      var(--paper);
+  }
+  .deco-orange{
+    position:absolute; top:-70px; right:-50px;
+    width: 270px; height:200px;
+    background: linear-gradient(135deg, var(--orange), #d95400);
+    border-radius: 38px;
+    transform: rotate(28deg);
+    box-shadow: 0 20px 45px rgba(217,84,0,0.28);
+    z-index:0; pointer-events:none;
+  }
+  .deco-dots{ position:absolute; display:grid; grid-template-columns: repeat(6,8px); gap:10px; z-index:0; pointer-events:none; }
+  .deco-dots span{ width:5px; height:5px; border-radius:50%; background: var(--orange); opacity:.55; }
+  .deco-dots.br{ right:40px; bottom:32px; }
+
+  .page{ position:relative; z-index:1; animation: fadeIn .25s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(6px);} to{ opacity:1; transform:none; } }
+
+  .page-head{ margin-bottom: 30px; }
+  .page-head h1{ font-size: 32px; margin: 0 0 4px; font-weight:800; color: var(--ink); }
+  .page-head p{ margin:0; color: var(--muted); font-size:15px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12px; font-weight:700; letter-spacing:0.6px; color: var(--blue-deep);
+    background: #e8f1ff; padding:6px 12px; border-radius:999px; margin-bottom:10px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--blue); }
+
+  /* ---------- CARDS ---------- */
+  .cards-row{ display:flex; gap:24px; flex-wrap:wrap; align-items:stretch; }
+  .card{
+    background: var(--card);
+    border-radius: 20px;
+    padding: 26px 28px;
+    box-shadow: 0 14px 34px rgba(20,30,60,0.07);
+    border: 1px solid var(--line);
+  }
+
+  /* Card: dados do pedido */
+  .card-pedido{ min-width:270px; }
+  .card-pedido .codigo{ font-family:'Poppins',sans-serif; font-weight:700; font-size:18px; }
+  .card-pedido .bancada-unidade{ color: var(--muted); font-size:14px; margin-top:2px; }
+  .posicao-fila{ font-size:46px; font-weight:800; margin:20px 0 10px; color: var(--blue-deep); font-family:'Poppins',sans-serif; }
+  .estimativa{ color: var(--muted); font-size:13.5px; }
+
+  /* Card: progresso */
+  .card-progresso{ flex:1; min-width:340px; }
+  .card-progresso h3{ margin:0 0 24px; font-size:16px; font-weight:700; }
+  .progresso-track{ display:flex; align-items:center; }
+  .etapa{
+    width:32px; height:32px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; border:2px solid var(--line);
+    background:#fff; color: var(--muted);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .etapa.concluida{ background: var(--blue); border-color: var(--blue); color:#fff; }
+  .etapa.atual{
+    background: var(--blue-2); border-color: var(--blue-2); color:#fff;
+    box-shadow: 0 0 0 4px rgba(62,168,255,0.22);
+  }
+  .linha{ flex:1; height:3px; background: var(--line); border-radius:2px; }
+  .linha.concluida{ background: var(--blue); }
+
+  @media (max-width: 900px){
+    .app{ flex-direction:column; }
+    .sidebar{ width:100%; flex-direction:row; overflow-x:auto; padding:16px; align-items:center; }
+    .brand{ margin:0 12px 0 0; }
+    nav.nav-list{ flex-direction:row; padding:0; }
+    .sidebar-foot{ display:none; }
+    .main{ padding: 28px 18px 40px; }
+    .cards-row{ flex-direction:column; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark"><span></span><span></span><span></span></div>
+        <div class="brand-logo">BANCADA <span>SMART</span></div>
+      </div>
+      <div class="brand-tag">Área do cliente</div>
+    </div>
+
+    <nav class="nav-list">
+      <a class="nav-item" href="#dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+      <a class="nav-item" href="#unidades">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21V6l8-3 8 3v15"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/></svg>
+        Unidades
+      </a>
+      <a class="nav-item" href="#novo-pedido">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Novo Pedido
+      </a>
+      <a class="nav-item active" href="acompanhar-pedido.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Acompanhar
+      </a>
+      <a class="nav-item" href="#historico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 5v5h5"/><path d="M12 8v4l3 2"/></svg>
+        Histórico
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a class="logout-link" href="#">Sair</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="deco-orange"></div>
+    <div class="deco-dots br">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="page">
+      <div class="page-head">
+        <div class="eyebrow"><span class="dot"></span> RF11 · Acompanhamento de Pedido</div>
+        <h1>Acompanhar pedido</h1>
+        <p>Status e estimativa</p>
+      </div>
+
+      <div class="cards-row">
+        <!-- Card com a identificação do pedido / bancada / unidade / fila / estimativa -->
+        <section class="card card-pedido">
+          <div class="codigo" id="pedido-codigo"></div>
+          <div class="bancada-unidade" id="pedido-bancada-unidade"></div>
+          <div class="posicao-fila" id="pedido-posicao"></div>
+          <div class="estimativa" id="pedido-estimativa"></div>
+        </section>
+
+        <!-- Card com a representação visual do progresso -->
+        <section class="card card-progresso">
+          <h3>Progresso</h3>
+          <div class="progresso-track" id="progresso-track"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* =====================================================================
+   RF11 — Acompanhar Pedido (Cliente)
+   Dados simulados (sem chamada a API nesta etapa)
+   ===================================================================== */
+const pedido = {
+  codigo: "BS-1042",
+  bancada: "Bancada 01",
+  unidade: "Blumenau",
+  posicaoFila: 2,
+  estimativa: "2h20",
+  etapaAtual: 4,
+  totalEtapas: 5
+};
+
+/**
+ * Preenche o card com os dados do pedido (código, bancada, unidade,
+ * posição na fila e estimativa). Lê tudo direto do objeto `pedido`,
+ * então basta trocar os valores do objeto e chamar de novo para atualizar a tela.
+ */
+function renderDadosPedido() {
+  document.getElementById("pedido-codigo").textContent = `Pedido #${pedido.codigo}`;
+  document.getElementById("pedido-bancada-unidade").textContent =
+    `${pedido.bancada} - ${pedido.unidade}`;
+  document.getElementById("pedido-posicao").textContent = `#${pedido.posicaoFila}`;
+  document.getElementById("pedido-estimativa").textContent =
+    `posição na fila · estimativa ${pedido.estimativa}`;
+}
+
+/**
+ * Monta a trilha visual do progresso (● ── ● ── ● ── ● ── ○).
+ * Para cada etapa de 1 até totalEtapas, decide se ela já foi concluída,
+ * é a etapa atual, ou ainda está pendente, e desenha a bolinha + a linha
+ * de conexão até a próxima etapa.
+ */
+function renderProgresso() {
+  const track = document.getElementById("progresso-track");
+  track.innerHTML = "";
+
+  for (let i = 1; i <= pedido.totalEtapas; i++) {
+    const etapa = document.createElement("div");
+    etapa.className = "etapa";
+
+    if (i < pedido.etapaAtual) {
+      etapa.classList.add("concluida");
+      etapa.textContent = "✓";
+    } else if (i === pedido.etapaAtual) {
+      etapa.classList.add("atual");
+      etapa.textContent = "✓";
+    }
+    track.appendChild(etapa);
+
+    // Linha conectando com a próxima etapa (não desenha depois da última)
+    if (i < pedido.totalEtapas) {
+      const linha = document.createElement("div");
+      linha.className = "linha";
+      if (i < pedido.etapaAtual) linha.classList.add("concluida");
+      track.appendChild(linha);
+    }
+  }
+}
+
+/**
+ * Atualiza a etapa atual do pedido e redesenha a tela.
+ * Critério de aceite: "progresso pode ser alterado através do objeto JavaScript".
+ * Ex.: chamar atualizarProgresso(5) no console avança o pedido pra última etapa.
+ * Quando a integração com a API existir, essa função pode ser chamada a partir
+ * da resposta do backend no lugar da alteração manual.
+ */
+function atualizarProgresso(novaEtapa) {
+  pedido.etapaAtual = novaEtapa;
+  renderProgresso();
+}
+window.atualizarProgresso = atualizarProgresso;
+
+/* ------------------------------ Início ------------------------------ */
+renderDadosPedido();
+renderProgresso();
+</script>
+
+</body>
+</html>
